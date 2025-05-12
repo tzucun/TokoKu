@@ -1,7 +1,7 @@
 <?php
 session_start();
-require 'Database.php';
-require 'ProductManager.php';
+require 'classes/Database.php';
+require 'classes/ProductManager.php';
 
 // Set header to return JSON
 header('Content-Type: application/json');

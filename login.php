@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'Database.php';
+require 'classes/Database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = Database::getInstance()->getConnection();

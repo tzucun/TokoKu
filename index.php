@@ -5,8 +5,8 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require 'Database.php';
-require 'ProductManager.php';
+require 'classes/Database.php';
+require 'classes/ProductManager.php';
 
 $productManager = new ProductManager();
 $sort = $_GET['sort'] ?? 'price_asc';

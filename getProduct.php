@@ -1,6 +1,6 @@
 <?php
-require 'Database.php';
-require 'ProductManager.php';
+require 'classes/Database.php';
+require 'classes/ProductManager.php';
 
 header('Content-Type: application/json');
 

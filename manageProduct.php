@@ -5,9 +5,9 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-require 'Database.php';
-require 'Product.php';
-require 'ProductManager.php';
+require 'classes/Database.php';
+require 'classes/Product.php';
+require 'classes/ProductManager.php';
 
 $productManager = new ProductManager();
 
