@@ -2,22 +2,47 @@
 session_start();
 require 'classes/Database.php';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $db = Database::getInstance()->getConnection();
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
+if (isset($_SESSION['user_id'])) {
+    header("Location: index.php");
+    exit();
+}
 
-    // Validasi password
-    if(strlen($password) < 8 || !preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
+    $confirm_password = $_POST['confirm_password'] ?? '';
+    $error = '';
+
+    if (empty($username) || empty($email) || empty($password) || empty($confirm_password)) {
+        $_SESSION['error'] = true;
+        $_SESSION['message'] = '⛔ Semua kolom harus diisi';
+        header("Location: register.php");
+        exit();
+    } 
+    
+    if ($password !== $confirm_password) {
+        $_SESSION['error'] = true;
+        $_SESSION['message'] = '⛔ Password tidak cocok';
+        header("Location: register.php");
+        exit();
+    } 
+    
+    if (strlen($password) < 8 || !preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
         $_SESSION['error'] = true;
         $_SESSION['message'] = '⛔ Password harus minimal 8 karakter dan mengandung minimal 1 simbol!';
         header("Location: register.php");
         exit();
     }
 
-    // Cek username/email sudah ada
-    $stmt = $db->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+    if ($email === 'admin@gmail.com') {
+        $_SESSION['error'] = true;
+        $_SESSION['message'] = '⛔ Email ini tidak dapat digunakan';
+        header("Location: register.php");
+        exit();
+    }
+ 
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
     $stmt->bind_param("ss", $username, $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -29,14 +54,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    // Hash password
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Simpan ke database
-    $stmt = $db->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $username, $email, $hashedPassword);
     
     if ($stmt->execute()) {
+        $_SESSION['error'] = false;
         $_SESSION['message'] = '🎉 Registrasi berhasil! Silakan login.';
         header("Location: login.php");
         exit();
@@ -54,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - TokoKU</title>
+    <title>Register - CunStore</title>
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>

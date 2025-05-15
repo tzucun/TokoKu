@@ -5,6 +5,13 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if (!isset($_SESSION['is_admin']) || $_SESSION['is_admin'] != true) {
+    $_SESSION['error'] = true;
+    $_SESSION['message'] = "⛔ User tidak dapat mengakses halaman Manage Product";
+    header("Location: index.php");
+    exit();
+}
+
 require 'classes/Database.php';
 require 'classes/Product.php';
 require 'classes/ProductManager.php';
@@ -63,7 +70,6 @@ $products = $productManager->getAllProducts();
     </button>
     <header class="admin-header">
         <h1>🛠️ Manage Products</h1>
-        <!-- Search Bar -->
         <div class="search-container admin-search">
                 <input type="text" id="adminSearchInput" placeholder="Cari produk..." autocomplete="off">
                 <i class="fas fa-search search-icon"></i>
@@ -101,7 +107,6 @@ $products = $productManager->getAllProducts();
         </div>
 
         <div class="product-list">
-            <!-- Search Status -->
             <div id="adminSearchStatus" class="search-status admin-search-status" style="display: none;">
                 <span>Menampilkan hasil pencarian untuk: "<span id="adminSearchQuery"></span>"</span>
                 <button id="adminClearSearch" class="clear-search">
@@ -109,7 +114,6 @@ $products = $productManager->getAllProducts();
                 </button>
             </div>
             
-            <!-- Product List Container -->
             <div id="productListContainer">
                 <?php foreach($products as $product): ?>
                 <div class="manage-product-card" data-id="<?= $product['id'] ?>">
@@ -130,7 +134,6 @@ $products = $productManager->getAllProducts();
                 <?php endforeach; ?>
             </div>
             
-            <!-- No Results Message -->
             <div id="adminNoResults" class="no-results admin-no-results" style="display: none;">
                 <i class="fas fa-search"></i>
                 <h3>Tidak ada produk yang ditemukan</h3>
@@ -174,7 +177,7 @@ $products = $productManager->getAllProducts();
     </div>
 
     <footer class="main-footer">
-        <p>&copy; 2025 TokoKU Inventory System.</p>
+        <p>&copy; 2025 CunStore.</p>
         <p>Nama: Stanley Gilbert Lionardi</p>
         <p>NIM: 09021282328042</p>
         <p>Kelas: TIBIL P2/2023</p>

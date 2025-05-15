@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    // Theme Toggle Functionality
     function toggleTheme() {
         const html = document.documentElement;
         const currentTheme = html.getAttribute('data-theme');
@@ -8,51 +7,42 @@ $(document).ready(function() {
         // Update attribute and cookie
         html.setAttribute('data-theme', newTheme);
         document.cookie = `theme=${newTheme}; path=/; max-age=${30 * 24 * 60 * 60}`; // 30 days
-        
-        // Update button
+
         document.querySelector('.theme-toggle').textContent = 
             newTheme === 'dark' ? '🌞' : '🌙';
     }
-    
-    // Attach event listener to theme toggle button
+
     $('.theme-toggle').on('click', toggleTheme);
-    
-    // Product Search Functionality
+
     let searchTimeout;
     const searchInput = $('#searchInput');
     const productGrid = $('#productGrid');
     const searchStatus = $('#searchStatus');
     const noResults = $('#noResults');
     const searchQuery = $('#searchQuery');
-    
-    // Function to perform search
+
     function performSearch() {
         const query = searchInput.val().trim();
-        
-        // Show/hide search status
+
         if (query) {
             searchQuery.text(query);
             searchStatus.show();
         } else {
             searchStatus.hide();
         }
-        
-        // Make AJAX request
+
         $.ajax({
             url: 'search.php',
             type: 'GET',
             data: { query: query },
             dataType: 'json',
             success: function(products) {
-                // Clear existing products
                 productGrid.empty();
                 
                 if (products.length > 0) {
-                    // Show products and hide no results message
                     productGrid.show();
                     noResults.hide();
-                    
-                    // Add each product to the grid
+
                     $.each(products, function(index, product) {
                         const stockClass = product.stock > 0 ? 'in-stock' : 'out-stock';
                         const stockText = product.stock > 0 ? `Stok: ${product.stock}` : 'Stok Habis';
@@ -83,7 +73,6 @@ $(document).ready(function() {
                         productGrid.append(productCard);
                     });
                 } else {
-                    // Show no results message
                     productGrid.hide();
                     noResults.show();
                 }
@@ -93,57 +82,49 @@ $(document).ready(function() {
             }
         });
     }
-    
-    // Search input event with debounce
+
     if(searchInput.length) {
         searchInput.on('input', function() {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(performSearch, 300);
         });
-        
-        // Clear search button
+
         $('#clearSearch').click(function() {
             searchInput.val('');
             searchStatus.hide();
             performSearch();
         });
     }
-    
-    // Admin Search Functionality
+
     let adminSearchTimeout;
     const adminSearchInput = $('#adminSearchInput');
     const productListContainer = $('#productListContainer');
     const adminSearchStatus = $('#adminSearchStatus');
     const adminNoResults = $('#adminNoResults');
     const adminSearchQuery = $('#adminSearchQuery');
-    
-    // Function to perform admin search
+
     function performAdminSearch() {
         const query = adminSearchInput.val().trim();
-        
-        // Show/hide search status
+
         if (query) {
             adminSearchQuery.text(query);
             adminSearchStatus.show();
         } else {
             adminSearchStatus.hide();
         }
-        
-        // Make AJAX request
+
         $.ajax({
             url: 'search.php',
             type: 'GET',
             data: { query: query },
             dataType: 'json',
             success: function(products) {
-                // Clear existing products
                 productListContainer.empty();
                 
                 if (products.length > 0) {
                     productListContainer.show();
                     adminNoResults.hide();
-                    
-                    // Add each product to the list
+
                     $.each(products, function(index, product) {
                         const formattedPrice = 'Rp ' + new Intl.NumberFormat('id-ID').format(product.price);
                         
@@ -178,7 +159,6 @@ $(document).ready(function() {
         });
     }
     
-    // Admin search input event with debounce
     if(adminSearchInput.length) {
         adminSearchInput.on('input', function() {
             clearTimeout(adminSearchTimeout);
@@ -193,22 +173,18 @@ $(document).ready(function() {
         });
     }
     
-    // Modal Functionality
     const modal = document.getElementById('editModal');
     if(modal) {
         const span = document.getElementsByClassName('close')[0];
         
-        // Close modal when clicking X
         span.onclick = () => modal.style.display = 'none';
         
-        // Close modal when clicking outside
         window.onclick = (event) => {
             if (event.target === modal) modal.style.display = 'none';
         };
     }
 });
 
-// Function to open edit modal
 function openEditModal(id) {
     fetch(`getProduct.php?id=${id}`)
         .then(response => response.json())
