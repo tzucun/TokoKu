@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: auth/login.php");
     exit();
 }
 
@@ -20,7 +20,7 @@ $isAdmin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == true;
 <html lang="en" data-theme="<?= isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light' ?>">
 <head>
     <title>CunStore</title>
-    <?php include 'headerSet.php'; ?>
+    <?php include 'utils/headerSet.php'; ?>
 </head>
 
 <body>
@@ -45,7 +45,7 @@ $isAdmin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == true;
                         <option value="price_desc" <?= $sort == 'price_desc' ? 'selected' : '' ?>>Harga Tertinggi</option>
                     </select>
                 </form>
-                <?php include 'message.php'; ?>
+                <?php include 'utils/message.php'; ?>
                 
                 <?php if (!$isAdmin): ?>
                 <a href="cart.php" class="admin-btn">
@@ -64,7 +64,7 @@ $isAdmin = isset($_SESSION['is_admin']) && $_SESSION['is_admin'] == true;
                 </a>
                 <?php endif; ?>
 
-                <a href="logout.php" class="admin-btn logout-btn">
+                <a href="auth/logout.php" class="admin-btn logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
                 </a>

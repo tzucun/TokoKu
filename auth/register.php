@@ -1,13 +1,14 @@
 <?php
 session_start();
-require 'classes/Database.php';
+require '../classes/Database.php';
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $db = Database::getInstance()->getConnection();
     $username = trim($_POST['username'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -42,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
  
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+    $stmt = $db->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
     $stmt->bind_param("ss", $username, $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -56,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+    $stmt = $db->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $username, $email, $hashedPassword);
     
     if ($stmt->execute()) {
@@ -79,11 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - CunStore</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <?php include 'message.php'; ?>
+    <?php include '../utils/message.php'; ?>
     
     <div class="auth-container">
         <div class="auth-card">
@@ -110,6 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                            required
                            pattern="(?=.*[!@#$%^&*(),.?\:{}|<>]).{8,}"
                            title="Minimal 8 karakter dengan 1 simbol">
+                </div>
+                <div class="form-group">
+                    <input type="password" 
+                           name="confirm_password" 
+                           placeholder="Konfirmasi Password" 
+                           required>
                 </div>
                 <button type="submit" class="btn-submit">📝 Daftar</button>
             </form>

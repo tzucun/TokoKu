@@ -164,8 +164,7 @@ $(document).ready(function() {
             clearTimeout(adminSearchTimeout);
             adminSearchTimeout = setTimeout(performAdminSearch, 300);
         });
-        
-        // Clear admin search button
+
         $('#adminClearSearch').click(function() {
             adminSearchInput.val('');
             adminSearchStatus.hide();

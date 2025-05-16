@@ -1,9 +1,9 @@
 <?php
 session_start();
-require 'classes/Database.php';
+require '../classes/Database.php';
 
 if (isset($_SESSION['user_id'])) {
-    header("Location: index.php");
+    header("Location: ../index.php");
     exit();
 }
 
@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['email'] = 'admin@gmail.com';
         $_SESSION['is_admin'] = true;
         
-        header("Location: index.php");
+        header("Location: ../index.php");
         exit();
     } 
     elseif (stripos($usernameOrEmail, 'admin') !== false && $password === 'admin1234.') {
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_SESSION['email'] = 'admin@gmail.com';
         $_SESSION['is_admin'] = true;
         
-        header("Location: index.php");
+        header("Location: ../index.php");
         exit();
     } 
     else {
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $user['email'];
                 $_SESSION['is_admin'] = false;
             }
-            header("Location: index.php");
+            header("Location: ../index.php");
             exit();
         } else {
             $_SESSION['error'] = true;
@@ -64,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - CunStore</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <?php include 'message.php'; ?>
+    <?php include '../utils/message.php'; ?>
     
     <div class="auth-container">
         <div class="auth-card">

@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: auth/login.php");
     exit();
 }
 
@@ -61,10 +61,10 @@ $products = $productManager->getAllProducts();
 <html lang="en" data-theme="<?= isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light' ?>">
 <head>
     <title>Manage Products</title>
-    <?php include 'headerSet.php'; ?>
+    <?php include 'utils/headerSet.php'; ?>
 </head>
 <body>
-    <?php include 'message.php'; ?>
+    <?php include 'utils/message.php'; ?>
     <button class="theme-toggle" onclick="toggleTheme()">
         <?= (isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark') ? '🌞' : '🌙' ?>
     </button>

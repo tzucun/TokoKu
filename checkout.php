@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
+    header("Location: auth/login.php");
     exit();
 }
 
@@ -23,14 +23,14 @@ if (empty($_SESSION['cart'])) {
 
 require 'classes/Database.php';
 require 'classes/ProductManager.php';
-require 'phpFunction/checkoutFunc.php';
+require 'utils/checkoutFunc.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="en" data-theme="<?= isset($_COOKIE['theme']) ? $_COOKIE['theme'] : 'light' ?>">
 <head>
     <title>Checkout - CunStore</title>
-    <?php include 'headerSet.php'; ?>
+    <?php include 'utils/headerSet.php'; ?>
 </head>
 
 <body>
@@ -48,7 +48,7 @@ require 'phpFunction/checkoutFunc.php';
                 <button class="theme-toggle">
                     <?= (isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark') ? '🌞' : '🌙' ?>
                 </button>
-                <a href="logout.php" class="admin-btn logout-btn">
+                <a href="auth/logout.php" class="admin-btn logout-btn">
                     <i class="fas fa-sign-out-alt"></i>
                     Logout
                 </a>
@@ -57,7 +57,7 @@ require 'phpFunction/checkoutFunc.php';
     </header>
 
     <main class="cart-container">
-        <?php include 'message.php'; ?>
+        <?php include 'utils/message.php'; ?>
 
         <div class="checkout-steps">
             <div class="step completed">
